@@ -119,7 +119,11 @@ const httpServer = http.createServer((req, res) => {
 });
 
 // ─── WebSocket Signaling ──────────────────────────────────────────────────────
-const wss = new WebSocketServer({ server: httpServer });
+const wss = new WebSocketServer({
+  server: httpServer,
+  maxPayload: 128 * 1024 * 1024, // 128 MB — SDP e candidatos ICE grandes
+  perMessageDeflate: false        // Sem compressão: menor latência no signaling
+});
 
 // rooms: Map<roomId, RoomObject>
 const rooms = new Map();
